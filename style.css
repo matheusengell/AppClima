@@ -1,33 +1,7 @@
 
 
 
-.nomeCidade{
-    border-radius: 8px;
-    padding: 10px;
-    width: 50%;
-}
-
-.cardTemperatura{
-    background-color: aliceblue;
-    border-radius: 28px;
-    font-weight: 500;
-    font-size: 20px;
-    max-width: 50%;
-    margin: 20px auto;  
-    color: black;
-}
-
-.cardTemperatura.Clear { background-color: rgba(255, 206, 103, 0.8); }
-.cardTemperatura.Clouds { background-color: rgba(189, 195, 199, 0.8); } 
-.cardTemperatura.Rain { 
-    background-color: rgba(75, 108, 183, 0.8);
-    color: (white)
-}    
-
-.cardTemperatura.Rain { background-color: rgba(75, 108, 183, 0.8) !important; color: white; }
-.cardTemperatura.Clouds { background-color: rgba(197, 194, 194, 0.8) !important; }
-.cardTemperatura.Clear { background-color: rgba(255, 180, 0, 0.8) !important;}
-.cardTemperatura.Thunderstorm { background-color: #383838 !important; color: white; }
+#cardTemperatura.Thunderstorm { background-color: #383838 !important; color: white; }
 
 #temperatura{
     font-size: 50px;
@@ -39,24 +13,23 @@
     margin-left: 20px;
 }
 
-.proximosDias h1{
-    font-size: 30px;
-    color: white;
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
+body.dia {
+    background-color: #87cde9; 
+    color: #000;
 }
-.card{
-    background-color: white;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem;
-    max-width: 50%;
-    margin: 20px auto;  
+
+body.noite {
+    background-color: #353434; 
+    }
+
+.card-previsao.noite{
+      background-color: #353434 !important; 
+}
+
+.card-previsao{
+      background-color: rgba(223, 246, 255, 0.4) !important; 
 }
 
 
-
-@media screen and (max-width: 728px){
-    
-}
+#cardTemperatura.noite { background-color: rgba(154, 158, 167, 0.8) !important; color: white; }
+#cardTemperatura.dia { background-color: rgba(223, 246, 255, 0.4) !important;color: white;}

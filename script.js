@@ -3,7 +3,9 @@ const inputCidade = document.getElementById("nomeCidade");
 const botaoPesquisar = document.querySelector("button"); 
 const cidadeElemento = document.getElementById("cidade");
 const dadosClimaElemento = document.getElementById("temperatura"); 
-const cardPrincipal = document.querySelector(".cardTemperatura");
+const cardPrincipal = document.getElementById("cardTemperatura");
+const card = document.getElementById("card");
+ const cards = document.querySelectorAll(".card-previsao");
 
 function traduzirEmoji(clima) {
     const dicionarioEmojis = {
@@ -19,6 +21,16 @@ function traduzirEmoji(clima) {
     return dicionarioEmojis[clima] || "🌡️";
 }
 
+function alterarDiaNoite(isNoite) {
+    if (isNoite) {
+        document.body.classList.add('noite');
+        document.body.classList.remove('dia');
+    } else {
+        document.body.classList.add('dia');
+        document.body.classList.remove('noite');
+    }
+}
+
 function buscarClima(cidade) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=${chaveApi}&lang=pt_br&units=metric`;
 
@@ -30,8 +42,20 @@ function buscarClima(cidade) {
         .then(data => {
             const condicao = data.weather[0].main; 
             const emoji = traduzirEmoji(condicao);
+            const temp = Math.round(data.main.temp);
+
+            const mensagem = gerarSugestao(condicao, temp);
+
+            document.getElementById("sugestao").textContent = mensagem;
+
             
-            cardPrincipal.className = "cardTemperatura " + condicao;
+            const noite = data.weather[0].icon.includes('n');
+            const periodo = noite ? 'noite' : 'dia';
+
+            cardPrincipal.classList.remove("Clear", "Clouds", "Rain", "Drizzle", "Thunderstorm", "Snow", "Mist", "Smoke", "dia", "noite");
+            cardPrincipal.classList.add(condicao, periodo);
+            
+            alterarDiaNoite(noite);
 
             cidadeElemento.textContent = `${data.name} ${emoji}`;
             dadosClimaElemento.innerHTML = 
@@ -41,6 +65,25 @@ function buscarClima(cidade) {
             cidadeElemento.textContent = "Erro na Busca";
             dadosClimaElemento.textContent = error.message;
         });
+}
+
+function gerarSugestao(condicao, temp) {
+    if (condicao === "Rain" || condicao === "Drizzle" || condicao === "Thunderstorm") {
+        return "🌧️ Leve um guarda-chuva!";
+    }
+    
+    if (condicao === "Clear") {
+        if (temp > 25) return "☀️ Ideal para uma caminhada ou praia!";
+        if (temp < 15) return "❄️ Tempo fresquinho, bom para um café.";
+        return "😎 O dia está lindo, aproveite lá fora!";
+    }
+
+    if (condicao === "Clouds") {
+        if (temp < 18) return "🎬 Tempo ótimo para assistir um filme em casa.";
+        return "☁️ O dia está nublado, mas agradável.";
+    }
+
+    return "🌡️ Aproveite o seu dia!";
 }
 
 async function buscarClimaProximosDias(cidade) {
@@ -55,6 +98,16 @@ async function buscarClimaProximosDias(cidade) {
 
         lista3Dias.forEach((dia, index) => {
             if (cards[index]) {
+                const elementoCard = cards[index];
+                const iconCode = dia.weather[0].icon; 
+
+                if (iconCode.includes('n')) {
+                    elementoCard.classList.add('noite');
+                    elementoCard.classList.add('text-white'); 
+                } else {
+                    elementoCard.classList.remove('noite');
+                    elementoCard.classList.remove('text-white');
+                }
                 const dataObj = new Date(dia.dt * 1000);
                 const nomeDia = dataObj.toLocaleDateString('pt-BR', { weekday: 'long' });
                 const condicao = dia.weather[0].main;
@@ -69,7 +122,7 @@ async function buscarClimaProximosDias(cidade) {
     } catch (error) {
         console.error("Erro ao buscar previsão:", error);
     }
-}
+}    
 
 function acaoPesquisar() {
     const cidadeDigitada = inputCidade.value.trim(); 
